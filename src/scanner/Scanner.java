@@ -1,8 +1,5 @@
 package scanner;
 
-import parser.Kind;
-import parser.Token;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,4 +1,6 @@
-package parser;
+package scanner;
+
+import scanner.Kind;
 
 public class Token {
 
@@ -12,6 +14,14 @@ public class Token {
     public Token(Kind kind, String string) {
         this.kind = kind;
         this.string = string;
+    }
+
+    public Kind getKind() {
+        return kind;
+    }
+
+    public String getString() {
+        return string;
     }
 
     @Override

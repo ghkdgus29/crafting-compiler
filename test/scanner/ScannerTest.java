@@ -2,7 +2,6 @@ package scanner;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import parser.Token;
 
 import java.util.List;
 
