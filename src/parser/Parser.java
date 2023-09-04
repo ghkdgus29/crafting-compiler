@@ -36,18 +36,21 @@ public class Parser {
     private Function parseFunction(List<Token> tokens) {
         Function result = new Function();
         skipCurrent(tokens, Kind.Function);
-        result.setName(tokens.get(index).getString());
+
+        result.setName(tokens.get(index).getString());                  // 식별자 세팅
         skipCurrent(tokens, Kind.Identifier);
+
         skipCurrent(tokens, Kind.LeftParen);
         if (tokens.get(index).getKind() != Kind.RightParen) {
             do {
-                result.add(tokens.get(index).getString());
+                result.add(tokens.get(index).getString());              // 파라미터 세팅
                 skipCurrent(tokens, Kind.Identifier);
             } while (skipCurrentIf(tokens, Kind.Comma));
         }
         skipCurrent(tokens, Kind.RightParen);
+
         skipCurrent(tokens, Kind.LeftBrace);
-        result.setBlock(parseBlock(tokens));
+        result.setBlock(parseBlock(tokens));                            // 함수의 블록 세팅
         skipCurrent(tokens, Kind.RightBrace);
         return result;
     }
@@ -57,7 +60,7 @@ public class Parser {
 
         while (tokens.get(index).getKind() != Kind.RightBrace) {
             switch (tokens.get(index).getKind()) {
-                default -> result.add(parseExpressionStatement(tokens));
+                default -> result.add(parseExpressionStatement(tokens));        // 식 분석
 
                 case Variable -> result.add(parseVariable(tokens));
 
@@ -201,20 +204,20 @@ public class Parser {
     }
 
     private Expression parseAssignment(List<Token> tokens) {
-        Expression result = parseOr(tokens);
-        if (tokens.get(index).getKind() != Kind.Assignment) {
+        Expression result = parseOr(tokens);                            // 왼쪽 피연산자 식 먼저 분석
+        if (tokens.get(index).getKind() != Kind.Assignment) {           // 만약 현재 식이 대입 연산자 식이 아닌 경우, 결과 그냥 반환
             return result;
         }
         skipCurrent(tokens, Kind.Assignment);
 
-        if (result instanceof GetVariable getVariable) {
+        if (result instanceof GetVariable getVariable) {                // 일반 변수에 대입하는 경우
             SetVariable setVariable = new SetVariable();
             setVariable.setName(getVariable.getName());
             setVariable.setValue(parseAssignment(tokens));
             return setVariable;
         }
 
-        if (result instanceof GetElement getElement) {
+        if (result instanceof GetElement getElement) {                  // 특정 배열이나 맵의 원소에 대입하는 경우
             SetElement setElement = new SetElement();
             setElement.setSub(getElement.getSub());
             setElement.setIndex(getElement.getIndex());
@@ -416,8 +419,8 @@ public class Parser {
         return result;
     }
 
-    private Expression parsePostfix(List<Token> tokens, Expression sub) {
-        while (true) {
+    private Expression parsePostfix(List<Token> tokens, Expression sub) {       //  식별자()  ,   식별자[]     와 같은 경우에 해당
+        while (true) {      // 이중 인덱스 접근이나 함수 호출일 경우를 대비해 while    // (함수 호출), (인덱스 접근)
             switch (tokens.get(index).getKind()) {
                 case LeftParen -> sub = parseCall(tokens, sub);
 
@@ -452,7 +455,7 @@ public class Parser {
         return result;
     }
 
-    private void skipCurrent() {
+    private void skipCurrent() {            // kind 종류가 여러개인 경우 사용
         index += 1;
     }
 
