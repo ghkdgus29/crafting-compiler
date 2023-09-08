@@ -2,6 +2,8 @@ package parser.node.expression;
 
 import scanner.Kind;
 
+import static interpreter.Datatype.isNumber;
+import static interpreter.Datatype.toNumber;
 import static parser.Printer.indent;
 
 public class Unary implements Expression {
@@ -22,6 +24,18 @@ public class Unary implements Expression {
         indent(depth);
         System.out.println(kind.getString());
         sub.print(depth + 1);
+    }
+
+    @Override
+    public Object interpret() {
+        Object value = sub.interpret();
+        if (kind == Kind.Add && isNumber(value)) {
+            return Math.abs(toNumber(value));
+        }
+        if (kind == Kind.Subtract && isNumber(value)) {
+            return toNumber(value) * -1;
+        }
+        return 0.0;
     }
 }
 // 단항 연산자

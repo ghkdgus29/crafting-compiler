@@ -1,7 +1,9 @@
 package parser.node.expression;
 
+import interpreter.Datatype;
 import scanner.Kind;
 
+import static interpreter.Datatype.*;
 import static parser.Printer.indent;
 
 public class Relational implements Expression {
@@ -35,6 +37,54 @@ public class Relational implements Expression {
         System.out.println("RHS:");
         rhs.print(depth + 2);
     }
+
+    @Override
+    public Object interpret() {
+        Object lValue = lhs.interpret();
+        Object rValue = rhs.interpret();
+
+        if (kind == Kind.Equal && isNull(lValue) && isNull(rValue)) {
+            return true;
+        }
+        if (kind == Kind.Equal && isBoolean(lValue) && isBoolean(rValue)) {
+            return toBoolean(lValue) == toBoolean(rValue);
+        }
+        if (kind == Kind.Equal && isNumber(lValue) && isNumber(rValue)) {
+            return toNumber(lValue).equals(toNumber(rValue));
+        }
+        if (kind == Kind.Equal && isString(lValue) && isString(rValue)) {
+            return Datatype.toString(lValue).equals(Datatype.toString(rValue));
+        }
+
+        if (kind == Kind.NotEqual && (isNull(lValue) || isNull(rValue))) {
+            return lValue != rValue;
+        }
+        if (kind == Kind.NotEqual && isBoolean(lValue) && isBoolean(rValue)) {
+            return toBoolean(lValue) != toBoolean(rValue);
+        }
+        if (kind == Kind.NotEqual && isNumber(lValue) && isNumber(rValue)) {
+            return toNumber(lValue) != toNumber(rValue);
+        }
+        if (kind == Kind.NotEqual && isString(lValue) && isString(rValue)) {
+            return !Datatype.toString(lValue).equals(Datatype.toString(rValue));
+        }
+
+        if (kind == Kind.LessThan && isNumber(lValue) && isNumber(rValue)) {
+            return toNumber(lValue) < toNumber(rValue);
+        }
+        if (kind == Kind.GreaterThan && isNumber(lValue) && isNumber(rValue)) {
+            return toNumber(lValue) > toNumber(rValue);
+        }
+        if (kind == Kind.LessOrEqual && isNumber(lValue) && isNumber(rValue)) {
+            return toNumber(lValue) <= toNumber(rValue);
+        }
+        if (kind == Kind.GreaterOrEqual && isNumber(lValue) && isNumber(rValue)) {
+            return toNumber(lValue) >= toNumber(rValue);
+        }
+
+        return false;
+    }
+
 }
 // 관계 연산자
 // !=, == 등

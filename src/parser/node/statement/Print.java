@@ -28,4 +28,15 @@ public class Print implements Statement{
             node.print(depth + 1);
         }
     }
+
+    @Override
+    public void interpret() {
+        for (Expression node : arguments) {
+            Object value = node.interpret();
+            System.out.print(value);
+        }
+        if (lineFeed) {
+            System.out.println();
+        }
+    }
 }

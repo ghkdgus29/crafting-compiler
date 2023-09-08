@@ -1,5 +1,6 @@
 package parser.node.expression;
 
+import static interpreter.Datatype.*;
 import static parser.Printer.indent;
 
 public class GetElement implements Expression {
@@ -35,6 +36,19 @@ public class GetElement implements Expression {
         indent(depth + 1);
         System.out.println("INDEX:");
         index.print(depth + 2);
+    }
+
+    @Override
+    public Object interpret() {
+        Object object = sub.interpret();
+        Object index = this.index.interpret();
+        if (isArray(object) && isNumber(index)) {
+            return getValueOfArray(object, index);
+        }
+        if (isMap(object) && isString(index)) {
+            return getValueOfMap(object, index);
+        }
+        return null;
     }
 }
 // 배열과 맵의 원소 참조

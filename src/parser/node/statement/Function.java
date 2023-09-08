@@ -11,8 +11,16 @@ public class Function implements Statement {
     private List<String> parameters = new ArrayList<>();
     private List<Statement> block;
 
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getParameterOf(int index) {
+        return parameters.get(index);
     }
 
     public void add(String parameter) {
@@ -39,6 +47,13 @@ public class Function implements Statement {
         System.out.println("BLOCK:");
         for (Statement node : block) {
             node.print(depth + 2);
+        }
+    }
+
+    @Override
+    public void interpret() {
+        for (Statement node : block) {
+            node.interpret();
         }
     }
 }

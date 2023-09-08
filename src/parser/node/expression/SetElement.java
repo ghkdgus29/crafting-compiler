@@ -1,5 +1,6 @@
 package parser.node.expression;
 
+import static interpreter.Datatype.*;
 import static parser.Printer.indent;
 
 public class SetElement implements Expression {
@@ -36,6 +37,21 @@ public class SetElement implements Expression {
         indent(depth + 1);
         System.out.println("VALUE:");
         value.print(depth + 2);
+    }
+
+    @Override
+    public Object interpret() {
+        Object object = sub.interpret();
+        Object index = this.index.interpret();
+        Object value = this.value.interpret();
+
+        if (isArray(object) && isNumber(index)) {
+            return setValueOfArray(object, index, value);
+        }
+        if (isMap(object) && isString(index)) {
+            return setValueOfMap(object, index, value);
+        }
+        return null;
     }
 }
 // 배열과 맵의 원소 수정

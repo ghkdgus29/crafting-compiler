@@ -1,7 +1,6 @@
 package parser.node.expression;
 
-import parser.Printer;
-
+import static interpreter.Datatype.isFalse;
 import static parser.Printer.indent;
 
 public class And implements Expression {
@@ -29,5 +28,10 @@ public class And implements Expression {
         indent(depth + 1);
         System.out.println("RHS:");
         rhs.print(depth + 2);
+    }
+
+    @Override
+    public Object interpret() {
+        return isFalse(lhs.interpret()) ? false : rhs.interpret();
     }
 }

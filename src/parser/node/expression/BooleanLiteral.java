@@ -15,4 +15,9 @@ public class BooleanLiteral implements Expression {
         indent(depth);
         System.out.println((value ? "true" : "false"));
     }
+
+    @Override
+    public Object interpret() {
+        return value;
+    }
 }

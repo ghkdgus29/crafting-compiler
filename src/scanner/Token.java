@@ -1,7 +1,5 @@
 package scanner;
 
-import scanner.Kind;
-
 public class Token {
 
     Kind kind = Kind.UnKnown;

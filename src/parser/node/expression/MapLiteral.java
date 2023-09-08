@@ -25,4 +25,13 @@ public class MapLiteral implements Expression {
         indent(depth);
         System.out.println("}");
     }
+
+    @Override
+    public Object interpret() {
+        HashMap<String, Object> result = new HashMap<>();
+        for (String key : values.keySet()) {
+            result.put(key, values.get(key).interpret());
+        }
+        return result;
+    }
 }
