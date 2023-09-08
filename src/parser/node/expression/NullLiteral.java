@@ -9,4 +9,9 @@ public class NullLiteral implements Expression {
         indent(depth);
         System.out.println("null");
     }
+
+    @Override
+    public Object interpret() {
+        return null;
+    }
 }

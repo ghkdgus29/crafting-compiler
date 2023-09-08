@@ -23,6 +23,15 @@ public class ArrayLiteral implements Expression {
         indent(depth);
         System.out.println("]");
     }
+
+    @Override
+    public Object interpret() {
+        ArrayList<Object> result = new ArrayList<>();
+        for (Expression node : values) {
+            result.add(node.interpret());
+        }
+        return result;
+    }
 }
 // 배열 리터럴
 // [1, 2, 3];

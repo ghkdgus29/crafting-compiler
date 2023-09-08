@@ -15,4 +15,9 @@ public class StringLiteral implements Expression {
         indent(depth);
         System.out.println("\"" + value + "\"");
     }
+
+    @Override
+    public Object interpret() {
+        return value;
+    }
 }

@@ -18,6 +18,11 @@ public class ExpressionStatement implements Statement{
         System.out.println("EXPRESSION:");
         expression.print(depth + 1);
     }
+
+    @Override
+    public void interpret() {
+        expression.interpret();
+    }
 }
 // 식을 임의로 소비시키기 위해 식을 감싸는 문 노드
 
