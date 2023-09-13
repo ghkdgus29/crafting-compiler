@@ -1,8 +1,11 @@
 package parser.node.expression;
 
+import generator.Instruction;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import static generator.Generator.writeCode;
 import static parser.Printer.indent;
 
 public class ArrayLiteral implements Expression {
@@ -31,6 +34,14 @@ public class ArrayLiteral implements Expression {
             result.add(node.interpret());
         }
         return result;
+    }
+
+    @Override
+    public void generate() {
+        for (int i = values.size() - 1; i >= 0; i--) {
+            values.get(i).generate();                           // 뒤에서 부터 목적 코드 생성
+        }
+        writeCode(Instruction.PushArray, values.size());        // 피연산자 스택에서 [n]개를 꺼내 배열로 만들고, 피연산자 스택에 다시 넣는다.
     }
 }
 // 배열 리터럴

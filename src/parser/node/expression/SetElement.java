@@ -1,5 +1,8 @@
 package parser.node.expression;
 
+import generator.Instruction;
+
+import static generator.Generator.writeCode;
 import static interpreter.Datatype.*;
 import static parser.Printer.indent;
 
@@ -52,6 +55,14 @@ public class SetElement implements Expression {
             return setValueOfMap(object, index, value);
         }
         return null;
+    }
+
+    @Override
+    public void generate() {
+        value.generate();                               // 대입할 값 목적 코드 생성
+        sub.generate();
+        index.generate();
+        writeCode(Instruction.SetElement);              // 피연산자 스택[-2] (배열, 맵) 의 피연산자 스택[-1] (인덱스) 번째 값을 피연산자 스택[-3] 으로 수정
     }
 }
 // 배열과 맵의 원소 수정

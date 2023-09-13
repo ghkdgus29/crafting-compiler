@@ -1,7 +1,9 @@
 package parser.node.statement;
 
+import generator.Instruction;
 import parser.node.expression.Expression;
 
+import static generator.Generator.writeCode;
 import static parser.Printer.indent;
 
 public class ExpressionStatement implements Statement{
@@ -22,6 +24,12 @@ public class ExpressionStatement implements Statement{
     @Override
     public void interpret() {
         expression.interpret();
+    }
+
+    @Override
+    public void generate() {
+        expression.generate();
+        writeCode(Instruction.PopOperand);              // 피연산자 스택에 남아있는 연산결과물을 제거
     }
 }
 // 식을 임의로 소비시키기 위해 식을 감싸는 문 노드

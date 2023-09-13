@@ -1,11 +1,13 @@
 package parser.node.statement;
 
+import generator.Instruction;
 import parser.node.expression.Expression;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static generator.Generator.*;
 import static interpreter.Datatype.isTrue;
 import static interpreter.Interpreter.local;
 import static parser.Printer.indent;
@@ -79,5 +81,36 @@ public class If implements Statement {
             node.interpret();
         }
         local.get(local.size() - 1).remove(0);
+    }
+
+    @Override
+    public void generate() {
+        List<Integer> jumpList = new ArrayList<>();             // 하나의 조건문 블록 수행 시, 남은 여러개의 조건문들을 건너뛰고 종료해야 한다.
+                                                                // 이때 필요한 각각의 조건문 블록이 끝난 뒤 사용되는 jump 명령어들을 저장하는 리스트
+        for (int i = 0; i < conditions.size(); i++) {
+            conditions.get(i).generate();                                       // 조건식 목적 코드 생성
+            int conditionJump = writeCode(Instruction.ConditionJump);               // 조건식이 거짓인 경우 다음 조건문으로 ConditionJump
+
+            pushBlock();                                            // 함수 프레임 내에 블록 추가
+            for (Statement node : blocks.get(i)) {
+                node.generate();                                            // 조건문의 본문 목적 코드 생성
+            }
+            popBlock();                                             // 블록 제거
+
+            jumpList.add(writeCode(Instruction.Jump));                      // 현재 조건문의 종료 지점에 남은 조건문들을 건너뛰기 위한 Jump 명령어 생성
+            patchAddress(conditionJump);                                            // 현재 조건문의 종료 지점 바로 다음을 CoditionJump 명령어에 Jump 할 주소로 설정
+        }
+
+        if (!elseBlock.isEmpty()) {                                            // elseBlock 목적 코드 생성
+            pushBlock();                                            // 함수 프레임 내에 블록 추가
+            for (Statement node : elseBlock) {
+                node.generate();                                            // elseBlock 본문 목적 코드 생성
+            }
+            popBlock();                                             // 블록 제거
+        }
+
+        for (Integer jump : jumpList) {                         // 남은 조건문들을 건너뛰기 위한 Jump 명령어들의 Jump 할 주소를 마지막 주소 바로 다음 주소로 설정
+            patchAddress(jump);
+        }
     }
 }

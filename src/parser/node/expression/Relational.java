@@ -1,8 +1,12 @@
 package parser.node.expression;
 
+import generator.Instruction;
 import interpreter.Datatype;
 import scanner.Kind;
 
+import java.util.Map;
+
+import static generator.Generator.writeCode;
 import static interpreter.Datatype.*;
 import static parser.Printer.indent;
 
@@ -85,6 +89,21 @@ public class Relational implements Expression {
         return false;
     }
 
+    @Override
+    public void generate() {
+        Map<Kind, Instruction> instructions = Map.of(
+                Kind.Equal, Instruction.Equal,
+                Kind.NotEqual, Instruction.NotEqual,
+                Kind.LessThan, Instruction.LessThan,
+                Kind.GreaterThan, Instruction.GreaterThan,
+                Kind.LessOrEqual, Instruction.LessOrEqual,
+                Kind.GreaterOrEqual, Instruction.GreaterOrEqual
+        );
+
+        lhs.generate();
+        rhs.generate();
+        writeCode(instructions.get(kind));
+    }
 }
 // 관계 연산자
 // !=, == 등
