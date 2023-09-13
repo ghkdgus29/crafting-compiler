@@ -1,7 +1,11 @@
 package parser.node.expression;
 
+import generator.Instruction;
+
 import java.util.Map;
 
+import static generator.Generator.getLocal;
+import static generator.Generator.writeCode;
 import static interpreter.Interpreter.global;
 import static interpreter.Interpreter.local;
 import static parser.Printer.indent;
@@ -35,6 +39,16 @@ public class SetVariable implements Expression {
             }
         }
         return global.put(name, value.interpret());             // 지역 변수 테이블에 변수명이 존재하지 않는다면, 전역 변수로 설정
+    }
+
+    @Override
+    public void generate() {
+        value.generate();
+        if (getLocal(name) == Integer.MAX_VALUE) {                  // 전역 변수 수정
+            writeCode(Instruction.SetGlobal, name);
+        } else {
+            writeCode(Instruction.SetLocal, getLocal(name));        // 지역 변수 수정
+        }
     }
 }
 // 변수의 수정 표현

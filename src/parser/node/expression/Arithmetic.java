@@ -1,8 +1,13 @@
 package parser.node.expression;
 
+import generator.Generator;
+import generator.Instruction;
 import interpreter.Datatype;
 import scanner.Kind;
 
+import java.util.Map;
+
+import static generator.Generator.writeCode;
 import static interpreter.Datatype.*;
 import static parser.Printer.indent;
 
@@ -63,6 +68,21 @@ public class Arithmetic implements Expression {
         }
 
         throw new RuntimeException(lValue + " " + kind.getString() + " " + rValue + ": 잘못된 계산 식입니다.");
+    }
+
+    @Override
+    public void generate() {
+        Map<Kind, Instruction> instructions = Map.of(
+                Kind.Add, Instruction.Add,
+                Kind.Subtract, Instruction.Subtract,
+                Kind.Multiply, Instruction.Multiply,
+                Kind.Divide, Instruction.Divide,
+                Kind.Modulo, Instruction.Modulo
+        );
+
+        lhs.generate();
+        rhs.generate();
+        writeCode(instructions.get(kind));
     }
 }
 

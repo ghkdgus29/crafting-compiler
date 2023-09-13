@@ -1,5 +1,8 @@
 package parser.node.expression;
 
+import generator.Instruction;
+
+import static generator.Generator.writeCode;
 import static parser.Printer.indent;
 
 public class BooleanLiteral implements Expression {
@@ -19,5 +22,10 @@ public class BooleanLiteral implements Expression {
     @Override
     public Object interpret() {
         return value;
+    }
+
+    @Override
+    public void generate() {
+        writeCode(Instruction.PushBoolean, value);
     }
 }

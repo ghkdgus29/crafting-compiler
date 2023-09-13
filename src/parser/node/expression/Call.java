@@ -1,5 +1,6 @@
 package parser.node.expression;
 
+import generator.Instruction;
 import interpreter.exception.ReturnException;
 
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static generator.Generator.writeCode;
 import static interpreter.Datatype.*;
 import static interpreter.Interpreter.local;
 import static parser.Printer.indent;
@@ -72,6 +74,15 @@ public class Call implements Expression {
 
         local.remove(local.size() - 1);                     // 호출함수 프레임 제거
         return null;
+    }
+
+    @Override
+    public void generate() {
+        for (int i = arguments.size() - 1; i >= 0; i--) {
+            arguments.get(i).generate();                        // 피연산자 스택에 넣으므로, 역순으로 인자들의 목적 코드 생성
+        }
+        sub.generate();                                         // 함수명 목적 코드를 생성하여 호출한 함수의 주소를 얻어온다.
+        writeCode(Instruction.Call, arguments.size());          // 피연산자 스택[-1] 값 (호출한 함수 주소)으로 Jump 한다. + 피연산자 스택에서 인자 개수만큼 파라미터로 가져간다.
     }
 }
 // 함수의 호출

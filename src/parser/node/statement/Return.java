@@ -1,8 +1,10 @@
 package parser.node.statement;
 
+import generator.Instruction;
 import interpreter.exception.ReturnException;
 import parser.node.expression.Expression;
 
+import static generator.Generator.writeCode;
 import static parser.Printer.indent;
 
 public class Return implements Statement {
@@ -27,5 +29,11 @@ public class Return implements Statement {
     @Override
     public void interpret() {
         throw new ReturnException(expression.interpret());
+    }
+
+    @Override
+    public void generate() {
+        expression.generate();
+        writeCode(Instruction.Return);          // 피연산자 스택에 있는 연산결과값을 반환
     }
 }
