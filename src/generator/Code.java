@@ -14,6 +14,14 @@ public class Code {
         this.operand = operand;
     }
 
+    public Instruction getInstruction() {
+        return instruction;
+    }
+
+    public Object getOperand() {
+        return operand;
+    }
+
     public void setOperand(Object operand) {
         this.operand = operand;
     }
