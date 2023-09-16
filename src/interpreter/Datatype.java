@@ -110,4 +110,12 @@ public class Datatype {
         return builtinFunctionTable.get(toString(value));
     }
 
+    public static Boolean isSize(Object value) {
+        return value instanceof Integer;
+    }
+
+    public static Integer toSize(Object value) {
+        return (Integer) value;
+    }
+
 }
